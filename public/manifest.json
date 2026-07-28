@@ -1,6 +1,6 @@
 {
-  "name": "お菓子作りスケジューラー",
-  "short_name": "仕込み計画",
+  "name": "仕込みTodo表",
+  "short_name": "仕込みTodo表",
   "description": "手作業・オーブンの空き時間を計算して仕込みスケジュールを組み立てる",
   "start_url": "/aboutus-okashi-scheduler/",
   "display": "standalone",

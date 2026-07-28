@@ -27,7 +27,7 @@ export default function PlanList({ plans, error, onOpen, onCreate, onDelete }) {
     <div className="app">
       <header>
         <p className="eyebrow">菓子工房 工程管理板</p>
-        <h1>お菓子作りスケジューラー</h1>
+        <h1>仕込みTodo表</h1>
         <p>手が空くタイミングとオーブンの空き時間を計算して、複数のお菓子を無理なく同時進行するための工程表を組み立てます。仕込み日ごとにプランを保存して、あとから見返せます。</p>
       </header>
 
