@@ -20,6 +20,9 @@
   --rest-soft:rgba(111,148,131,0.16);
   --radius:10px;
   --radius-lg:16px;
+  --font-sans:'Hiragino Kaku Gothic ProN', 'Hiragino Sans', sans-serif;
+  --font-serif:'Hiragino Mincho ProN', serif;
+  --font-mono:'Hiragino Kaku Gothic ProN', 'Hiragino Sans', sans-serif;
 }
 
 *{ box-sizing:border-box; }
@@ -29,7 +32,7 @@ body{
     radial-gradient(ellipse 900px 500px at 15% -10%, rgba(224,162,59,0.07), transparent 60%),
     var(--bg);
   color:var(--ink);
-  font-family:'Zen Kaku Gothic New', sans-serif;
+  font-family:var(--font-sans);
   min-height:100vh;
   line-height:1.6;
 }
@@ -48,7 +51,7 @@ header{
   padding-bottom:28px;
 }
 .eyebrow{
-  font-family:'JetBrains Mono', monospace;
+  font-family:var(--font-mono);
   font-size:12px;
   letter-spacing:0.16em;
   color:var(--oven-ink);
@@ -56,7 +59,7 @@ header{
   margin:0 0 10px;
 }
 h1{
-  font-family:'Shippori Mincho', serif;
+  font-family:var(--font-serif);
   font-weight:800;
   font-size:clamp(28px, 4vw, 40px);
   margin:0 0 10px;
@@ -100,7 +103,7 @@ header p{
 }
 .plan-card:hover{ border-color:var(--oven); }
 .plan-card-title{
-  font-family:'Shippori Mincho', serif;
+  font-family:var(--font-serif);
   font-weight:600;
   font-size:17px;
   margin:0 0 4px;
@@ -153,7 +156,7 @@ header p{
   background:var(--panel-2);
   border:1px solid var(--line);
   color:var(--ink);
-  font-family:'Shippori Mincho', serif;
+  font-family:var(--font-serif);
   font-weight:600;
   font-size:18px;
   padding:8px 12px;
@@ -165,7 +168,7 @@ header p{
   background:var(--panel-2);
   border:1px solid var(--line);
   color:var(--ink);
-  font-family:'JetBrains Mono', monospace;
+  font-family:var(--font-mono);
   font-size:14px;
   padding:8px 10px;
   border-radius:8px;
@@ -200,7 +203,7 @@ header p{
   border-bottom:1px solid var(--line);
 }
 .day-tab{
-  font-family:'Shippori Mincho', serif;
+  font-family:var(--font-serif);
   font-size:16px;
   font-weight:600;
   background:none;
@@ -224,7 +227,7 @@ header p{
 
 section{ margin-bottom:36px; }
 .section-title{
-  font-family:'Shippori Mincho', serif;
+  font-family:var(--font-serif);
   font-weight:600;
   font-size:19px;
   margin:0 0 16px;
@@ -233,7 +236,7 @@ section{ margin-bottom:36px; }
   gap:10px;
 }
 .section-title .sub{
-  font-family:'Zen Kaku Gothic New', sans-serif;
+  font-family:var(--font-sans);
   font-weight:400;
   font-size:12.5px;
   color:var(--ink-faint);
@@ -255,11 +258,48 @@ section{ margin-bottom:36px; }
   background:var(--panel-2);
   border:1px solid var(--line);
   color:var(--ink);
-  font-family:'JetBrains Mono', monospace;
+  font-family:var(--font-mono);
   font-size:16px;
   padding:7px 10px;
   border-radius:8px;
 }
+
+.toggle-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:12px 18px;
+  margin-bottom:10px;
+  flex-wrap:wrap;
+}
+.toggle-row-check{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:14px;
+  color:var(--ink-dim);
+  cursor:pointer;
+  white-space:nowrap;
+}
+.toggle-row input[type=checkbox]{
+  width:16px;
+  height:16px;
+  accent-color:var(--oven);
+}
+.toggle-row input[type=time], .toggle-row input[type=number]{
+  background:var(--panel-2);
+  border:1px solid var(--line);
+  color:var(--ink);
+  font-family:var(--font-mono);
+  font-size:14px;
+  padding:6px 8px;
+  border-radius:7px;
+}
+.toggle-row input[type=number]{ width:64px; text-align:center; }
+.toggle-row .unit{ font-size:12px; color:var(--ink-faint); }
 
 /* --- dessert cards --- */
 .dessert-list{ display:flex; flex-direction:column; gap:16px; }
@@ -289,7 +329,7 @@ section{ margin-bottom:36px; }
   border:none;
   border-bottom:1px solid transparent;
   color:var(--ink);
-  font-family:'Shippori Mincho', serif;
+  font-family:var(--font-serif);
   font-weight:600;
   font-size:18px;
   padding:4px 2px;
@@ -302,7 +342,7 @@ section{ margin-bottom:36px; }
   background:var(--panel-2);
   border:1px solid var(--line);
   color:var(--ink);
-  font-family:'JetBrains Mono', monospace;
+  font-family:var(--font-mono);
   font-size:13px;
   padding:6px 8px;
   border-radius:7px;
@@ -317,7 +357,7 @@ section{ margin-bottom:36px; }
   padding:5px 10px;
   border-radius:20px;
   cursor:pointer;
-  font-family:'Zen Kaku Gothic New', sans-serif;
+  font-family:var(--font-sans);
   white-space:nowrap;
 }
 .save-template-btn:hover{ color:var(--oven-ink); border-color:var(--oven); }
@@ -329,7 +369,7 @@ section{ margin-bottom:36px; }
   padding:5px 10px;
   border-radius:20px;
   cursor:pointer;
-  font-family:'Zen Kaku Gothic New', sans-serif;
+  font-family:var(--font-sans);
   white-space:nowrap;
 }
 .remove-dessert-btn:hover{ color:var(--hand); border-color:var(--hand); }
@@ -383,7 +423,7 @@ section{ margin-bottom:36px; }
   background:var(--panel-2);
   border:1px solid var(--line);
   color:var(--ink);
-  font-family:'JetBrains Mono', monospace;
+  font-family:var(--font-mono);
   font-size:14px;
   padding:7px 6px;
   border-radius:7px;
@@ -426,7 +466,7 @@ section{ margin-bottom:36px; }
   cursor:pointer;
   margin-top:10px;
   width:100%;
-  font-family:'Zen Kaku Gothic New', sans-serif;
+  font-family:var(--font-sans);
 }
 .add-proc-btn:hover{ border-color:var(--oven); color:var(--oven-ink); }
 
@@ -446,7 +486,7 @@ section{ margin-bottom:36px; }
   max-width:220px;
 }
 .btn{
-  font-family:'Zen Kaku Gothic New', sans-serif;
+  font-family:var(--font-sans);
   font-size:14px;
   font-weight:700;
   padding:11px 20px;
@@ -492,13 +532,13 @@ section{ margin-bottom:36px; }
 }
 .finish-readout .label{ font-size:13px; color:var(--ink-dim); }
 .finish-readout .time{
-  font-family:'JetBrains Mono', monospace;
+  font-family:var(--font-mono);
   font-size:34px;
   font-weight:600;
   color:var(--oven-ink);
 }
 .finish-readout .span{
-  font-family:'JetBrains Mono', monospace;
+  font-family:var(--font-mono);
   font-size:14px;
   color:var(--ink-dim);
 }
@@ -524,7 +564,7 @@ section{ margin-bottom:36px; }
   top:0;
   bottom:0;
   border-left:1px solid var(--line);
-  font-family:'JetBrains Mono', monospace;
+  font-family:var(--font-mono);
   font-size:10.5px;
   color:var(--ink-faint);
   padding-left:4px;
@@ -566,6 +606,10 @@ section{ margin-bottom:36px; }
   overflow:hidden;
   font-weight:600;
   cursor:default;
+}
+.fixed-block{
+  background:repeating-linear-gradient(135deg, var(--ink-faint) 0 8px, var(--ink-dim) 8px 16px);
+  color:#fff;
 }
 
 .divider-label{
@@ -636,7 +680,7 @@ section{ margin-bottom:36px; }
 }
 .log-list{
   margin-top:12px;
-  font-family:'JetBrains Mono', monospace;
+  font-family:var(--font-mono);
   font-size:12.5px;
   color:var(--ink-dim);
   list-style:none;

@@ -52,7 +52,23 @@ export function formatDurationLabel(mins) {
   return h + '時間' + m + '分';
 }
 
-export function schedule(startMinutes, desserts) {
+// 手作業が塞がっている固定の時間帯（買い出し・休憩など）を避けて開始時刻を後ろにずらす
+function resolveHandStart(start, duration, fixedBlocks) {
+  let s = start;
+  let changed = true;
+  while (changed) {
+    changed = false;
+    for (const b of fixedBlocks) {
+      if (s < b.end && s + duration > b.start) {
+        s = b.end;
+        changed = true;
+      }
+    }
+  }
+  return s;
+}
+
+export function schedule(startMinutes, desserts, fixedBlocks = []) {
   const items = desserts
     .map((d, idx) => ({
       id: d.id,
@@ -109,7 +125,8 @@ export function schedule(startMinutes, desserts) {
       if (isDone(item)) return;
       const step = item.steps[item.stepIndex];
       if (step.resource === 'hand') {
-        const start = Math.max(item.availableAt, handFreeAt);
+        const rawStart = Math.max(item.availableAt, handFreeAt);
+        const start = resolveHandStart(rawStart, Math.max(0, Number(step.duration) || 0), fixedBlocks);
         if (!bestHand || start < bestHand.start || (start === bestHand.start && item.priority < bestHand.item.priority)) {
           bestHand = { item, step, start };
         }

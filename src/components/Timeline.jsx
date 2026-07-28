@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { RESOURCE_META, formatMinutesToTime, formatDurationLabel } from '../lib/schedule.js';
 
-export default function Timeline({ scheduled, startMinutes, validDesserts }) {
+export default function Timeline({ scheduled, startMinutes, validDesserts, fixedBlocks = [] }) {
   const [logOpen, setLogOpen] = useState(false);
 
   const endMinutes = Math.max(...scheduled.map((s) => s.end));
-  const span = Math.max(30, endMinutes - startMinutes);
+  const boardEndMinutes = fixedBlocks.length
+    ? Math.max(endMinutes, ...fixedBlocks.map((b) => b.end))
+    : endMinutes;
+  const span = Math.max(30, boardEndMinutes - startMinutes);
 
   const pxPerMin = span > 8 * 60 ? 2.6 : 4.2;
   const boardWidth = span * pxPerMin;
@@ -20,7 +23,10 @@ export default function Timeline({ scheduled, startMinutes, validDesserts }) {
     return scheduled.filter((s) => s.resource === resourceKey);
   }
 
-  const sortedLog = [...scheduled].sort((a, b) => a.start - b.start);
+  const sortedLog = [
+    ...scheduled,
+    ...fixedBlocks.map((b) => ({ resource: 'fixed', name: b.name, stepName: '', start: b.start, end: b.end })),
+  ].sort((a, b) => a.start - b.start);
 
   return (
     <>
@@ -57,6 +63,19 @@ export default function Timeline({ scheduled, startMinutes, validDesserts }) {
                   title={`${s.name}: ${s.stepName}(${formatMinutesToTime(s.start)}–${formatMinutesToTime(s.end)})`}
                 >
                   {s.name}
+                </div>
+              ))}
+              {fixedBlocks.map((b, i) => (
+                <div
+                  key={'fixed-' + i}
+                  className="block fixed-block"
+                  style={{
+                    left: (b.start - startMinutes) * pxPerMin,
+                    width: Math.max(2, (b.end - b.start) * pxPerMin),
+                  }}
+                  title={`${b.name}(${formatMinutesToTime(b.start)}–${formatMinutesToTime(b.end)})`}
+                >
+                  {b.name}
                 </div>
               ))}
             </div>
@@ -137,6 +156,13 @@ export default function Timeline({ scheduled, startMinutes, validDesserts }) {
           </button>
           <ul className={`log-list${logOpen ? ' open' : ''}`}>
             {sortedLog.map((s, i) => {
+              if (s.resource === 'fixed') {
+                return (
+                  <li key={i}>
+                    {formatMinutesToTime(s.start)}–{formatMinutesToTime(s.end)} <span className="tag">予定</span> {s.name}
+                  </li>
+                );
+              }
               const meta = RESOURCE_META[s.resource];
               return (
                 <li key={i}>
