@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { makeDessert, makeProcess, parseTimeToMinutes, schedule } from '../lib/schedule.js';
+import { applyTemplate, saveDessertAsTemplate } from '../lib/templates.js';
 import DessertCard from './DessertCard.jsx';
 import Timeline from './Timeline.jsx';
 
-export default function DayPanel({ value, onChange, dayLabel }) {
+export default function DayPanel({ value, onChange, dayLabel, templates, onTemplatesChanged }) {
   const { startTime, desserts } = value;
   const [results, setResults] = useState(null);
+  const [templateSelectValue, setTemplateSelectValue] = useState('');
 
   function calcNow() {
     const validDesserts = desserts.filter((d) => d.processes.length > 0 && (d.startFrom || 0) < d.processes.length);
@@ -45,6 +47,36 @@ export default function DayPanel({ value, onChange, dayLabel }) {
     onChange({ ...value, desserts: desserts.filter((d) => d.id !== id) });
   }
 
+  function handlePickTemplate(templateId) {
+    setTemplateSelectValue('');
+    if (!templateId) return;
+    const template = templates.find((t) => String(t.id) === templateId);
+    if (!template) return;
+    const input = window.prompt(`「${template.name}」を何個分作りますか？`, '');
+    const quantity = Number(input);
+    if (!input || !Number.isFinite(quantity) || quantity <= 0) return;
+    onChange({ ...value, desserts: [...desserts, applyTemplate(template, quantity, desserts.length)] });
+  }
+
+  async function handleSaveAsTemplate(dessert) {
+    let quantity = dessert.quantity;
+    if (!quantity) {
+      const input = window.prompt('この工程表は何個分の分量ですか？', '');
+      quantity = Number(input);
+      if (!input || !Number.isFinite(quantity) || quantity <= 0) return;
+    }
+    try {
+      await saveDessertAsTemplate(dessert, quantity);
+      if (!dessert.quantity) {
+        updateDessert(dessert.id, { ...dessert, quantity });
+      }
+      await onTemplatesChanged();
+      window.alert(`テンプレート「${dessert.name}」を保存しました(${quantity}個)`);
+    } catch (e) {
+      window.alert(`テンプレートの保存に失敗しました: ${e.message || e}`);
+    }
+  }
+
   return (
     <div className="day-panel">
       <section>
@@ -67,6 +99,7 @@ export default function DayPanel({ value, onChange, dayLabel }) {
               dessert={d}
               onChange={(next) => updateDessert(d.id, next)}
               onRemove={() => removeDessert(d.id)}
+              onSaveAsTemplate={() => handleSaveAsTemplate(d)}
             />
           ))}
         </div>
@@ -74,6 +107,18 @@ export default function DayPanel({ value, onChange, dayLabel }) {
           <button className="btn btn-ghost" onClick={addDessert}>
             ＋ お菓子を追加
           </button>
+          <select
+            className="template-select"
+            value={templateSelectValue}
+            onChange={(e) => handlePickTemplate(e.target.value)}
+          >
+            <option value="">テンプレートから追加...</option>
+            {templates.map((t) => (
+              <option key={t.id} value={t.id}>
+                {t.name}
+              </option>
+            ))}
+          </select>
           <button className="btn btn-primary" onClick={calcNow}>
             {dayLabel}の内容でスケジュールを計算
           </button>

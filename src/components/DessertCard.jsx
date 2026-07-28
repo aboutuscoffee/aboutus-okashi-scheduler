@@ -1,8 +1,12 @@
 import { RESOURCE_META, makeProcess } from '../lib/schedule.js';
 
-export default function DessertCard({ dessert, onChange, onRemove }) {
+export default function DessertCard({ dessert, onChange, onRemove, onSaveAsTemplate }) {
   function setName(name) {
     onChange({ ...dessert, name });
+  }
+
+  function setQuantity(quantity) {
+    onChange({ ...dessert, quantity });
   }
 
   function setStartFrom(idx) {
@@ -37,6 +41,18 @@ export default function DessertCard({ dessert, onChange, onRemove }) {
           placeholder="お菓子の名前"
           onChange={(e) => setName(e.target.value)}
         />
+        <input
+          className="dessert-quantity-input"
+          type="number"
+          min="0"
+          step="1"
+          value={dessert.quantity || ''}
+          placeholder="個数"
+          onChange={(e) => setQuantity(e.target.value ? Math.max(0, Number(e.target.value) || 0) : null)}
+        />
+        <button className="save-template-btn" onClick={onSaveAsTemplate}>
+          テンプレートとして保存
+        </button>
         <button className="remove-dessert-btn" onClick={onRemove}>
           このお菓子を削除
         </button>

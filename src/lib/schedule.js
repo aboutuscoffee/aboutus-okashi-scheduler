@@ -21,13 +21,14 @@ export function makeProcess(name, duration, resource) {
   return { id: nextId('p'), name, duration, resource };
 }
 
-export function makeDessert(name, colorIndex, processes, startFrom) {
+export function makeDessert(name, colorIndex, processes, startFrom, quantity) {
   return {
     id: nextId('d'),
     name,
     color: DESSERT_COLORS[colorIndex % DESSERT_COLORS.length],
     processes,
     startFrom: startFrom || 0,
+    quantity: quantity || null,
   };
 }
 

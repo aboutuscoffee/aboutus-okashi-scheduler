@@ -1,4 +1,5 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { fetchTemplates } from '../lib/templates.js';
 import DayPanel from './DayPanel.jsx';
 
 function snapshotOf(title, planDate, data) {
@@ -15,9 +16,22 @@ export default function PlanEditor({ plan, onBack, onSave, onDelete }) {
   const [deleting, setDeleting] = useState(false);
   const [savedAt, setSavedAt] = useState(plan.updated_at || null);
   const [saveError, setSaveError] = useState(null);
+  const [templates, setTemplates] = useState([]);
 
   const lastSavedRef = useRef(snapshotOf(plan.title || '', plan.plan_date || '', plan.data));
   const dirty = snapshotOf(title, planDate, data) !== lastSavedRef.current;
+
+  async function refreshTemplates() {
+    try {
+      setTemplates(await fetchTemplates());
+    } catch (e) {
+      console.error('テンプレート読み込みに失敗しました:', e);
+    }
+  }
+
+  useEffect(() => {
+    refreshTemplates();
+  }, []);
 
   async function handleSave() {
     setSaving(true);
@@ -98,10 +112,22 @@ export default function PlanEditor({ plan, onBack, onSave, onDelete }) {
       </div>
 
       <div style={{ display: activeDay === '1' ? '' : 'none' }}>
-        <DayPanel dayLabel="1日目" value={data.day1} onChange={(day1) => setData((d) => ({ ...d, day1 }))} />
+        <DayPanel
+          dayLabel="1日目"
+          value={data.day1}
+          onChange={(day1) => setData((d) => ({ ...d, day1 }))}
+          templates={templates}
+          onTemplatesChanged={refreshTemplates}
+        />
       </div>
       <div style={{ display: activeDay === '2' ? '' : 'none' }}>
-        <DayPanel dayLabel="2日目" value={data.day2} onChange={(day2) => setData((d) => ({ ...d, day2 }))} />
+        <DayPanel
+          dayLabel="2日目"
+          value={data.day2}
+          onChange={(day2) => setData((d) => ({ ...d, day2 }))}
+          templates={templates}
+          onTemplatesChanged={refreshTemplates}
+        />
       </div>
     </div>
   );

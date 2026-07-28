@@ -273,6 +273,7 @@ section{ margin-bottom:36px; }
 .dessert-card-head{
   display:flex;
   align-items:center;
+  flex-wrap:wrap;
   gap:12px;
   margin-bottom:10px;
 }
@@ -283,6 +284,7 @@ section{ margin-bottom:36px; }
 }
 .dessert-name-input{
   flex:1;
+  min-width:120px;
   background:transparent;
   border:none;
   border-bottom:1px solid transparent;
@@ -295,6 +297,30 @@ section{ margin-bottom:36px; }
 .dessert-name-input:hover, .dessert-name-input:focus{
   border-bottom-color:var(--line);
 }
+.dessert-quantity-input{
+  width:64px;
+  background:var(--panel-2);
+  border:1px solid var(--line);
+  color:var(--ink);
+  font-family:'JetBrains Mono', monospace;
+  font-size:13px;
+  padding:6px 8px;
+  border-radius:7px;
+  text-align:center;
+  flex-shrink:0;
+}
+.save-template-btn{
+  background:none;
+  border:1px solid var(--line);
+  color:var(--ink-dim);
+  font-size:12px;
+  padding:5px 10px;
+  border-radius:20px;
+  cursor:pointer;
+  font-family:'Zen Kaku Gothic New', sans-serif;
+  white-space:nowrap;
+}
+.save-template-btn:hover{ color:var(--oven-ink); border-color:var(--oven); }
 .remove-dessert-btn{
   background:none;
   border:1px solid var(--line);
@@ -408,6 +434,16 @@ section{ margin-bottom:36px; }
   display:flex;
   gap:12px;
   margin-top:18px;
+  flex-wrap:wrap;
+}
+.template-select{
+  background:var(--panel-2);
+  border:1px solid var(--line);
+  color:var(--ink);
+  font-size:13px;
+  padding:0 14px;
+  border-radius:24px;
+  max-width:220px;
 }
 .btn{
   font-family:'Zen Kaku Gothic New', sans-serif;
