@@ -3,20 +3,21 @@
 @tailwind utilities;
 
 :root{
-  --bg:#241F1B;
-  --panel:#2E2721;
-  --panel-2:#38302A;
+  --bg:#FFFFFF;
+  --panel:#FBF7EF;
+  --panel-2:#F1E6D2;
   --paper:#F3E9D6;
-  --ink:#F2EAD9;
-  --ink-dim:#B4A488;
-  --ink-faint:#8A7B64;
-  --line:rgba(242,234,217,0.13);
+  --ink:#2B2420;
+  --ink-dim:#6B5A47;
+  --ink-faint:#9C8B76;
+  --line:rgba(43,36,32,0.14);
   --hand:#C1453D;
-  --hand-soft:rgba(193,69,61,0.20);
+  --hand-soft:rgba(193,69,61,0.14);
   --oven:#E0A23B;
-  --oven-soft:rgba(224,162,59,0.20);
+  --oven-ink:#9C6B1F;
+  --oven-soft:rgba(224,162,59,0.16);
   --rest:#6F9483;
-  --rest-soft:rgba(111,148,131,0.20);
+  --rest-soft:rgba(111,148,131,0.16);
   --radius:10px;
   --radius-lg:16px;
 }
@@ -25,7 +26,7 @@
 html,body{ margin:0; padding:0; }
 body{
   background:
-    radial-gradient(ellipse 900px 500px at 15% -10%, rgba(224,162,59,0.08), transparent 60%),
+    radial-gradient(ellipse 900px 500px at 15% -10%, rgba(224,162,59,0.07), transparent 60%),
     var(--bg);
   color:var(--ink);
   font-family:'Zen Kaku Gothic New', sans-serif;
@@ -50,7 +51,7 @@ header{
   font-family:'JetBrains Mono', monospace;
   font-size:12px;
   letter-spacing:0.16em;
-  color:var(--oven);
+  color:var(--oven-ink);
   text-transform:uppercase;
   margin:0 0 10px;
 }
@@ -210,7 +211,7 @@ header p{
   position:relative;
   margin-right:14px;
 }
-.day-tab.active{ color:var(--oven); }
+.day-tab.active{ color:var(--oven-ink); }
 .day-tab.active::after{
   content:'';
   position:absolute;
@@ -401,7 +402,7 @@ section{ margin-bottom:36px; }
   width:100%;
   font-family:'Zen Kaku Gothic New', sans-serif;
 }
-.add-proc-btn:hover{ border-color:var(--oven); color:var(--oven); }
+.add-proc-btn:hover{ border-color:var(--oven); color:var(--oven-ink); }
 
 .controls-actions{
   display:flex;
@@ -458,7 +459,7 @@ section{ margin-bottom:36px; }
   font-family:'JetBrains Mono', monospace;
   font-size:34px;
   font-weight:600;
-  color:var(--oven);
+  color:var(--oven-ink);
 }
 .finish-readout .span{
   font-family:'JetBrains Mono', monospace;
