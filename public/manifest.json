@@ -1,0 +1,9 @@
+{
+  "name": "お菓子作りスケジューラー",
+  "short_name": "仕込み計画",
+  "description": "手作業・オーブンの空き時間を計算して仕込みスケジュールを組み立てる",
+  "start_url": "/aboutus-okashi-scheduler/",
+  "display": "standalone",
+  "background_color": "#241F1B",
+  "theme_color": "#241F1B"
+}
