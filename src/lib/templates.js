@@ -76,3 +76,8 @@ export async function saveDessertAsTemplate(dessert, quantity) {
   if (error) throw error;
   return data;
 }
+
+export async function deleteTemplate(id) {
+  const { error } = await supabase.from(TABLE).delete().eq('id', id);
+  if (error) throw error;
+}

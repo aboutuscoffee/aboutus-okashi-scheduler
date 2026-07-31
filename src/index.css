@@ -484,6 +484,18 @@ section{ margin-bottom:36px; }
   border-radius:24px;
   max-width:220px;
 }
+
+.template-delete-row{ margin-top:10px; }
+.template-delete-select{
+  background:none;
+  border:1px solid var(--line);
+  color:var(--ink-faint);
+  font-size:12px;
+  padding:4px 12px;
+  border-radius:20px;
+  max-width:220px;
+}
+.template-delete-select:hover{ color:var(--hand); border-color:var(--hand); }
 .btn{
   font-family:var(--font-sans);
   font-size:14px;

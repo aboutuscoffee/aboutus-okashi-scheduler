@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { makeDessert, makeProcess, parseTimeToMinutes, schedule } from '../lib/schedule.js';
-import { applyTemplate, saveDessertAsTemplate } from '../lib/templates.js';
+import { applyTemplate, deleteTemplate, saveDessertAsTemplate } from '../lib/templates.js';
 import DessertCard from './DessertCard.jsx';
 import Timeline from './Timeline.jsx';
 
@@ -26,6 +26,7 @@ export default function DayPanel({ value, onChange, dayLabel, templates, onTempl
   const breakTime = value.breakTime || DEFAULT_BREAK;
   const [results, setResults] = useState(null);
   const [templateSelectValue, setTemplateSelectValue] = useState('');
+  const [templateDeleteValue, setTemplateDeleteValue] = useState('');
 
   function setShopping(next) {
     onChange({ ...value, shopping: next });
@@ -83,6 +84,20 @@ export default function DayPanel({ value, onChange, dayLabel, templates, onTempl
     const quantity = Number(input);
     if (!input || !Number.isFinite(quantity) || quantity <= 0) return;
     onChange({ ...value, desserts: [...desserts, applyTemplate(template, quantity, desserts.length)] });
+  }
+
+  async function handleDeleteTemplate(templateId) {
+    setTemplateDeleteValue('');
+    if (!templateId) return;
+    const template = templates.find((t) => String(t.id) === templateId);
+    if (!template) return;
+    if (!window.confirm(`テンプレート「${template.name}」を削除しますか？(元に戻せません)`)) return;
+    try {
+      await deleteTemplate(template.id);
+      await onTemplatesChanged();
+    } catch (e) {
+      window.alert(`テンプレートの削除に失敗しました: ${e.message || e}`);
+    }
   }
 
   async function handleSaveAsTemplate(dessert) {
@@ -211,6 +226,22 @@ export default function DayPanel({ value, onChange, dayLabel, templates, onTempl
             {dayLabel}の内容でスケジュールを計算
           </button>
         </div>
+        {templates.length > 0 && (
+          <div className="template-delete-row">
+            <select
+              className="template-delete-select"
+              value={templateDeleteValue}
+              onChange={(e) => handleDeleteTemplate(e.target.value)}
+            >
+              <option value="">🗑 テンプレートを削除...</option>
+              {templates.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
       </section>
       <section>
         <div className="section-title">
