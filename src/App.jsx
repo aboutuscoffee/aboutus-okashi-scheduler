@@ -9,6 +9,7 @@ function emptyDay() {
     desserts: [],
     shopping: { enabled: false, startTime: '13:00', duration: 45 },
     breakTime: { enabled: false, startTime: '12:00', duration: 60 },
+    manualOverrides: {},
   };
 }
 

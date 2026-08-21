@@ -616,12 +616,17 @@ section{ margin-bottom:36px; }
   white-space:nowrap;
   overflow:hidden;
   font-weight:600;
-  cursor:default;
+  cursor:grab;
+  touch-action:none;
+  user-select:none;
 }
+.block:active{ cursor:grabbing; }
 .fixed-block{
   background:repeating-linear-gradient(135deg, var(--ink-faint) 0 8px, var(--ink-dim) 8px 16px);
   color:#fff;
+  cursor:default;
 }
+.block-conflict{ outline:2px solid var(--hand); outline-offset:-1px; }
 
 .divider-label{
   font-size:12px;
@@ -664,7 +669,11 @@ section{ margin-bottom:36px; }
   overflow:hidden;
   color:#1c1712;
   font-weight:500;
+  cursor:grab;
+  touch-action:none;
+  user-select:none;
 }
+.step-block:active{ cursor:grabbing; }
 
 .legend{
   display:flex;

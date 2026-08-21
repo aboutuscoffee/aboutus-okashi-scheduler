@@ -7,6 +7,15 @@ import Timeline from './Timeline.jsx';
 const DEFAULT_SHOPPING = { enabled: false, startTime: '13:00', duration: 45 };
 const DEFAULT_BREAK = { enabled: false, startTime: '12:00', duration: 60 };
 
+function applyOverrides(scheduled, overrides) {
+  return scheduled.map((s) => {
+    const ov = overrides[s.processId];
+    if (ov == null) return s;
+    const duration = s.end - s.start;
+    return { ...s, start: ov, end: ov + duration };
+  });
+}
+
 function buildFixedBlocks(shopping, breakTime) {
   const blocks = [];
   if (shopping.enabled) {
@@ -24,6 +33,7 @@ export default function DayPanel({ value, onChange, dayLabel, templates, onTempl
   const { startTime, desserts } = value;
   const shopping = value.shopping || DEFAULT_SHOPPING;
   const breakTime = value.breakTime || DEFAULT_BREAK;
+  const manualOverrides = value.manualOverrides || {};
   const [results, setResults] = useState(null);
   const [templateSelectValue, setTemplateSelectValue] = useState('');
   const [templateDeleteValue, setTemplateDeleteValue] = useState('');
@@ -39,6 +49,9 @@ export default function DayPanel({ value, onChange, dayLabel, templates, onTempl
   function calcNow() {
     const validDesserts = desserts.filter((d) => d.processes.length > 0 && (d.startFrom || 0) < d.processes.length);
     const fixedBlocks = buildFixedBlocks(shopping, breakTime);
+    if (Object.keys(manualOverrides).length > 0) {
+      onChange({ ...value, manualOverrides: {} });
+    }
     if (validDesserts.length === 0) {
       setResults({ empty: true, message: 'お菓子と工程を1つ以上追加してから計算してください。' });
       return;
@@ -50,6 +63,10 @@ export default function DayPanel({ value, onChange, dayLabel, templates, onTempl
       return;
     }
     setResults({ scheduled, startMinutes, validDesserts, fixedBlocks });
+  }
+
+  function handleAdjustStep(processId, newStart) {
+    onChange({ ...value, manualOverrides: { ...manualOverrides, [processId]: newStart } });
   }
 
   // 読み込み時に一度だけ自動計算する（ベースHTMLの初期表示と同じ挙動）
@@ -251,10 +268,11 @@ export default function DayPanel({ value, onChange, dayLabel, templates, onTempl
           <div className="empty-state">{results.message}</div>
         ) : (
           <Timeline
-            scheduled={results.scheduled}
+            scheduled={applyOverrides(results.scheduled, manualOverrides)}
             startMinutes={results.startMinutes}
             validDesserts={results.validDesserts}
             fixedBlocks={results.fixedBlocks}
+            onAdjust={handleAdjustStep}
           />
         )}
       </section>

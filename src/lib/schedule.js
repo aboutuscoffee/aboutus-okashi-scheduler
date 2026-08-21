@@ -96,6 +96,7 @@ export function schedule(startMinutes, desserts, fixedBlocks = []) {
       const start = item.availableAt;
       const end = start + Math.max(0, Number(step.duration) || 0);
       scheduled.push({
+        processId: step.id,
         dessertId: item.id,
         name: item.name,
         color: item.color,
@@ -153,6 +154,7 @@ export function schedule(startMinutes, desserts, fixedBlocks = []) {
     const { item, step, start } = picked;
     const end = start + Math.max(0, Number(step.duration) || 0);
     scheduled.push({
+      processId: step.id,
       dessertId: item.id,
       name: item.name,
       color: item.color,

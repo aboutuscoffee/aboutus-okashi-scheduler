@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { RESOURCE_META, formatMinutesToTime, formatDurationLabel } from '../lib/schedule.js';
 
-export default function Timeline({ scheduled, startMinutes, validDesserts, fixedBlocks = [] }) {
+export default function Timeline({ scheduled, startMinutes, validDesserts, fixedBlocks = [], onAdjust }) {
   const [logOpen, setLogOpen] = useState(false);
+  const dragRef = useRef(null);
 
   const endMinutes = Math.max(...scheduled.map((s) => s.end));
   const boardEndMinutes = fixedBlocks.length
@@ -21,6 +22,31 @@ export default function Timeline({ scheduled, startMinutes, validDesserts, fixed
 
   function blocksFor(resourceKey) {
     return scheduled.filter((s) => s.resource === resourceKey);
+  }
+
+  function hasConflict(entry) {
+    return scheduled.some(
+      (o) => o.processId !== entry.processId && o.resource === entry.resource && entry.start < o.end && entry.end > o.start
+    );
+  }
+
+  function handlePointerDown(e, s) {
+    if (!onAdjust || !s.processId) return;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    dragRef.current = { processId: s.processId, startX: e.clientX, origStart: s.start };
+  }
+
+  function handlePointerMove(e) {
+    const d = dragRef.current;
+    if (!d) return;
+    const deltaMin = (e.clientX - d.startX) / pxPerMin;
+    let next = Math.round((d.origStart + deltaMin) / 5) * 5;
+    next = Math.max(startMinutes, next);
+    onAdjust(d.processId, next);
+  }
+
+  function handlePointerUp() {
+    dragRef.current = null;
   }
 
   const sortedLog = [
@@ -54,13 +80,16 @@ export default function Timeline({ scheduled, startMinutes, validDesserts, fixed
               {blocksFor('hand').map((s, i) => (
                 <div
                   key={i}
-                  className="block"
+                  className={`block${hasConflict(s) ? ' block-conflict' : ''}`}
                   style={{
                     left: (s.start - startMinutes) * pxPerMin,
                     width: Math.max(2, (s.end - s.start) * pxPerMin),
                     background: s.color,
                   }}
                   title={`${s.name}: ${s.stepName}(${formatMinutesToTime(s.start)}–${formatMinutesToTime(s.end)})`}
+                  onPointerDown={(e) => handlePointerDown(e, s)}
+                  onPointerMove={handlePointerMove}
+                  onPointerUp={handlePointerUp}
                 >
                   {s.name}
                 </div>
@@ -86,13 +115,16 @@ export default function Timeline({ scheduled, startMinutes, validDesserts, fixed
               {blocksFor('oven').map((s, i) => (
                 <div
                   key={i}
-                  className="block"
+                  className={`block${hasConflict(s) ? ' block-conflict' : ''}`}
                   style={{
                     left: (s.start - startMinutes) * pxPerMin,
                     width: Math.max(2, (s.end - s.start) * pxPerMin),
                     background: s.color,
                   }}
                   title={`${s.name}: ${s.stepName}(${formatMinutesToTime(s.start)}–${formatMinutesToTime(s.end)})`}
+                  onPointerDown={(e) => handlePointerDown(e, s)}
+                  onPointerMove={handlePointerMove}
+                  onPointerUp={handlePointerUp}
                 >
                   {s.name}
                 </div>
@@ -118,13 +150,16 @@ export default function Timeline({ scheduled, startMinutes, validDesserts, fixed
                       return (
                         <div
                           key={i}
-                          className="step-block"
+                          className={`step-block${hasConflict(s) ? ' block-conflict' : ''}`}
                           style={{
                             left: (s.start - startMinutes) * pxPerMin,
                             width: Math.max(2, (s.end - s.start) * pxPerMin),
                             background: meta.solid,
                           }}
                           title={`${meta.icon} ${meta.label}: ${s.stepName} ${formatMinutesToTime(s.start)}–${formatMinutesToTime(s.end)}`}
+                          onPointerDown={(e) => handlePointerDown(e, s)}
+                          onPointerMove={handlePointerMove}
+                          onPointerUp={handlePointerUp}
                         >
                           {label}
                         </div>
